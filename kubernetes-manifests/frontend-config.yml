@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: frontend-config
 data: 
-  API_URL: "http://backend-service:5000/api"
+  API_URL: "/api"
