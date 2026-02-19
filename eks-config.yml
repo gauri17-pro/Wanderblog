@@ -1,0 +1,39 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: wanderblog-eks-cluster
+  region: ap-south-1
+  version: "1.35" 
+  tags:
+    owner: gauri-shirkande
+    bu: cwg
+    project: wanderblog
+
+availabilityZones:
+  - ap-south-1a
+  - ap-south-1b
+
+iam:
+  withOIDC: true
+
+managedNodeGroups:
+  - name: wanderblog-node-group
+    instanceType: t2.micro
+    minSize: 2
+    maxSize: 2
+    privateNetworking: true
+    volumeSize: 20
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        externalDNS: false
+        certManager: yes
+        ebs: false
+        fsx: false
+        efs: false
+        albIngress: true
+        xRay: false
+        cloudWatch: false
+    labels:
+      lifecycle: ec2-autoscaler

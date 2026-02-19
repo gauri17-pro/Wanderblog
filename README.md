@@ -26,14 +26,39 @@ sudo mv /tmp/eksctl /usr/local/bin
 b. Run the command below to setup an EKS Cluster using eksctl
 
 ```
-eksctl create cluster --name eks-cluster --version 1.35 --region ap-south-1 --node-type t2.medium  --zones ap-south-1a,ap-south-1b
+eksctl create cluster -f eks-config.yaml
 ```
 
 - Using Terraform 
 
 You can refer the video: https://youtu.be/wY8VFIAz_Og?si=1USqt2bME8_Gh9jt
 
-You can modify the instance types of node-groups as per the requirement.
+You can modify the EKS configuration as per the requirement.
+
+c. Create IAM Policy
+
+```
+curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.13.3/docs/install/iam_policy.json
+```
+
+```
+aws iam create-policy \
+  --policy-name AWSLoadBalancerControllerIAMPolicy \
+  --policy-document file://iam_policy.json
+```
+
+d. Create an IAM-Backed Kubernetes Service Account
+
+```
+eksctl create iamserviceaccount \
+  --cluster=wanderblog-eks-cluster \
+  --namespace=kube-system \
+  --name=aws-load-balancer-controller \
+  --attach-policy-arn=arn:aws:iam::<Account-id>:policy/AWSLoadBalancerControllerIAMPolicy \
+  --override-existing-serviceaccounts \
+  --region ap-south-1 \
+  --approve
+```
 
 #### 2. Install helm
 
@@ -65,7 +90,12 @@ helm install sealed-secrets-controller sealed-secrets/sealed-secrets --namespace
 #### 5. Install AWS Load Balancer Controller 
 
 ```
-helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=eks-cluster
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+  -n kube-system \
+  --set clusterName=wanderblog-eks-cluster \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller \
+  --version 1.13.0
 ```
 
 #### 6. Create the sealed files 
