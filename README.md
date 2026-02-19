@@ -26,7 +26,7 @@ sudo mv /tmp/eksctl /usr/local/bin
 b. Run the command below to setup an EKS Cluster using eksctl
 
 ```
-eksctl create cluster -f eks-config.yaml
+eksctl create cluster -f eks-config.yml
 ```
 
 - Using Terraform 
