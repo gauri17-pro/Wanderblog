@@ -54,6 +54,47 @@ tar -xvzf kubeseal-${KUBESEAL_VERSION:?}-linux-amd64.tar.gz kubeseal
 sudo install -m 755 kubeseal /usr/local/bin/kubeseal
 ```
 
+#### 4. Install Sealed-secrets controller 
+
+```
+helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+helm repo update sealed-secrets
+helm install sealed-secrets-controller sealed-secrets/sealed-secrets --namespace kube-system
+```
+
+#### 5. Install AWS Load Balancer Controller 
+
+```
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=eks-cluster
+```
+
+#### 6. Create the sealed files 
+
+a. Create sealed file for Mongo Secrets
+
+```
+kubectl create secret generic mongo-secrets \
+  --from-literal=MONGO_INITDB_ROOT_USERNAME=admin --from-literal=MONGO_INITDB_ROOT_PASSWORD=mongodb123 \
+  --dry-run=client -o yaml | \
+kubeseal \
+  --controller-name sealed-secrets-controller \
+  --controller-namespace kube-system \
+  -o yaml | tee mongo-sealedsecret.yml
+```
+
+b. Create sealed files for Backend URL
+
+```
+kubectl create secret generic backend-secrets \
+  --from-literal=MONGO_URI="mongodb://admin:mongodb123@mongo-service:27017/mydb?authSource=admin" \
+  --dry-run=client -o yaml | \
+kubeseal \
+  --controller-name sealed-secrets-controller \
+  --controller-namespace kube-system \
+  -o yaml | tee backend-sealedsecret.yml
+```
+
+
 
 
 
