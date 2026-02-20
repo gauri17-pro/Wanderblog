@@ -90,6 +90,11 @@ helm install sealed-secrets-controller sealed-secrets/sealed-secrets --namespace
 #### 5. Install AWS Load Balancer Controller 
 
 ```
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update eks
+```
+
+```
 helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   -n kube-system \
   --set clusterName=wanderblog-eks-cluster \
@@ -123,6 +128,7 @@ kubeseal \
   --controller-namespace kube-system \
   -o yaml | tee backend-sealedsecret.yml
 ```
+
 
 
 

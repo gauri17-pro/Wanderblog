@@ -10,7 +10,7 @@ metadata:
 
       # Target Type and Listener Port
       alb.ingress.kubernetes.io/target-type: ip
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
 
       # Health Check Settings (delegated per-service)
       alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
@@ -20,6 +20,9 @@ metadata:
       alb.ingress.kubernetes.io/healthy-threshold-count: '2'
       alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
       alb.ingress.kubernetes.io/success-codes: '200'
+
+      alb.ingress.kubernetes.io/ssl-redirect: '443'
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:829058667760:certificate/a011b35b-b2bf-435e-9cca-a1e7827031a3
 spec:
   ingressClassName: alb
   rules:
