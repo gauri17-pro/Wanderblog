@@ -129,6 +129,58 @@ kubeseal \
   -o yaml | tee backend-sealedsecret.yml
 ```
 
+#### 7. You need a domain to host your website on using Ingress
+
+#### 8. Create a Hosted Zone for your host on Route53 
+
+You just provide the custom domain that you got from Hostinger or any other relevant website
+
+#### 9. And for SSL certificate you can use ACM certificate
+
+a. Click on Request Certificate 
+
+b. Enter the Fully Qualified Domain Name and click on Request keeping the rest as it is.
+
+c. Click on Create a Route53 Record
+
+d. This will create a CNAME record on your Hosted Zone.
+
+#### 10. Verify the Certificate 
+
+a. Go to your domain hosting website 
+
+b. Go to your Domain -> DNS/Nameservers -> Add Record -> CNAME 
+
+c. This will verify the request and show the status as Success after some time
+
+#### 11. Add the certificate to the annotations section of Ingress
+
+```
+alb.ingress.kubernetes.io/ssl-redirect: '443'
+alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:829058667760:certificate/a011b35b-b2bf-435e-9cca-a1e7827031a3
+```
+
+#### 12. Apply all the manifest files.
+
+a. Execute the command
+
+```
+kubectl apply -f kubernetes-manifests/*
+```
+
+#### 13. Add the A record in Route53
+
+a. Go to the Hosted Zone on Route53 
+b. No need to add the Record name
+c. Enable Alias
+d. Select the load balancer
+
+#### 14. Try accessing the website using Domain name
+
+
+
+
+
 
 
 

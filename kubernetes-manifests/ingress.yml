@@ -26,7 +26,8 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - http:
+    - host: wanderblog.online
+      http:
         paths:
           - path: /
             pathType: Prefix
