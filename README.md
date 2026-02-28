@@ -103,7 +103,13 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   --version 1.13.0
 ```
 
-#### 6. Create the sealed files 
+#### 6. Install the CSI Addon 
+
+```
+kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.44"
+```
+
+#### 7. Create the sealed files 
 
 a. Create sealed file for Mongo Secrets
 
@@ -129,13 +135,13 @@ kubeseal \
   -o yaml | tee backend-sealedsecret.yml
 ```
 
-#### 7. You need a domain to host your website on using Ingress
+#### 8. You need a domain to host your website on using Ingress
 
-#### 8. Create a Hosted Zone for your host on Route53 
+#### 9. Create a Hosted Zone for your host on Route53 
 
 You just provide the custom domain that you got from Hostinger or any other relevant website
 
-#### 9. And for SSL certificate you can use ACM certificate
+#### 10. And for SSL certificate you can use ACM certificate
 
 a. Click on Request Certificate 
 
@@ -145,7 +151,7 @@ c. Click on Create a Route53 Record
 
 d. This will create a CNAME record on your Hosted Zone.
 
-#### 10. Verify the Certificate 
+#### 11. Verify the Certificate 
 
 a. Go to your domain hosting website 
 
@@ -153,14 +159,14 @@ b. Go to your Domain -> DNS/Nameservers -> Add Record -> CNAME
 
 c. This will verify the request and show the status as Success after some time
 
-#### 11. Add the certificate to the annotations section of Ingress
+#### 12. Add the certificate to the annotations section of Ingress
 
 ```
 alb.ingress.kubernetes.io/ssl-redirect: '443'
 alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:829058667760:certificate/a011b35b-b2bf-435e-9cca-a1e7827031a3
 ```
 
-#### 12. Apply all the manifest files.
+#### 13. Apply all the manifest files.
 
 a. Execute the command
 
@@ -168,14 +174,14 @@ a. Execute the command
 kubectl apply -f kubernetes-manifests/*
 ```
 
-#### 13. Add the A record in Route53
+#### 14. Add the A record in Route53
 
 a. Go to the Hosted Zone on Route53 
 b. No need to add the Record name
 c. Enable Alias
 d. Select the load balancer
 
-#### 14. Try accessing the website using Domain name
+#### 15. Try accessing the website using Domain name
 
 
 
