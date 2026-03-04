@@ -3,9 +3,9 @@ kind: StatefulSet
 metadata:
   name: mongo
 spec:
-  serviceName: mongo
+  serviceName: mongo-service        # must match your headless Service name
   replicas: 2
-  PodManagementPolicy: OrderedReady
+  podManagementPolicy: OrderedReady # fixed casing
   selector:
     matchLabels:
       app: mongo
@@ -14,15 +14,17 @@ spec:
       labels:
         app: mongo
     spec:
-      service: mongo-service
+      # removed invalid 'service: mongo-service' field
       terminationGracePeriodSeconds: 10
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchLabels:
-                  app: mongo
-              topologyKey: topology.kubernetes.io/zone
+          preferredDuringSchedulingIgnoredDuringExecution:  # changed to preferred
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: mongo
+                topologyKey: topology.kubernetes.io/zone
       containers:
         - name: mongo
           image: mongo:6
@@ -35,7 +37,7 @@ spec:
     - metadata:
         name: mongo-pvc
       spec:
-        accessModes: ["ReadWriteOncePod"]
+        accessModes: ["ReadWriteOnce"]   # changed from ReadWriteOncePod
         storageClassName: "mongo-storage"
         resources:
           requests:
