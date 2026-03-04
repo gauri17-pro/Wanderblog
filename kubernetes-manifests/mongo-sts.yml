@@ -18,13 +18,11 @@ spec:
       terminationGracePeriodSeconds: 10
       affinity:
         podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:  # changed to preferred
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app: mongo
-                topologyKey: topology.kubernetes.io/zone
+          requiredDuringSchedulingIgnoredDuringExecution:	
+            - labelSelector:	
+                matchLabels:	
+                  app: mongo	
+              topologyKey: topology.kubernetes.io/zone
       containers:
         - name: mongo
           image: mongo:6
