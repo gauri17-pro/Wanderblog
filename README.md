@@ -106,32 +106,17 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
 #### 6. Install ArgoCD 
 
 ```
-helm repo add argo-cd https://argoproj.github.io/argo-helm
+kubectl create namespace argocd
+kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 
 ```
-helm upgrade --install argocd argo-cd/argo-cd --version "${ARGOCD_CHART_VERSION}" \
-  --namespace "argocd" --create-namespace \
-  --values ~/environment/eks-workshop/modules/automation/gitops/argocd/values.yaml \
-  --wait
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 ```
+You can access the ArgoCD server using Loadbalancer DNS now
 
 ```
-export ARGOCD_SERVER=$(kubectl get svc argocd-server -n argocd -o json | jq --raw-output '.status.loadBalancer.ingress[0].hostname')
-```
-
-```
-curl --head -X GET --retry 20 --retry-all-errors --retry-delay 15 \
-  --connect-timeout 5 --max-time 10 -k \
-  https://$ARGOCD_SERVER
-```
-
-```
-export ARGOCD_PWD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
-```
-
-```
-echo "Argo CD admin password: $ARGOCD_PWD"
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 ```
 
 #### 6. Install the CSI Addon 
