@@ -57,7 +57,7 @@ jobs:
       - name: Get latest image tag
         id: get_tag
         run: |
-          LATEST=$(curl -s "https://hub.docker.com/v2/repositories/$DOCKER_USERNAME/$FRONTEND_IMAGE_NAME/tags/?ordering=last_updated" \
+          LATEST=$(curl -s "https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_IMAGE_NAME }}/tags/?ordering=last_updated" \
               | jq -r '.results[].name' \
               | grep -E '^v[0-9]+$' \
               | sort -V | tail -1)
@@ -75,7 +75,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: $DOCKER_USERNAME/$FRONTEND_IMAGE_NAME:${{ steps.get_tag.outputs.next_tag }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.get_tag.outputs.next_tag }}
 
       - name: Output image URI
         run: |
