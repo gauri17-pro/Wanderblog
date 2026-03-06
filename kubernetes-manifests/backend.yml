@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: gauris17/wanderblog-backend:v1
+          image: gauris17/wanderblog-backend:v2
           ports:
             - containerPort: 5000
           envFrom:
