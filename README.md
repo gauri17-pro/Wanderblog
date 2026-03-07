@@ -1,3 +1,6 @@
+
+
+
 # Wanderblog
 
 ![alt text](image.png)
@@ -120,6 +123,12 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 ```
 
 #### 6. Install the CSI Addon 
+
+```
+aws iam attach-role-policy \
+  --role-name <NodeInstanceRoleName> \
+  --policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+```
 
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.44"
