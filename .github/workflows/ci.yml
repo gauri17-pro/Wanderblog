@@ -1,4 +1,4 @@
-name: Build & Push Docker Images to ECR
+name: Build & Push Docker Images to Dockerhub
 
 on:
   push:
