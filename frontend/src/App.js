@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
-
+//ASLAM MULLA -4 
 function App() {
   const [blogs, setBlogs] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -24,8 +24,34 @@ function App() {
     }
   };
 
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // ================= HANDLE SUBMIT =================
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
 
     try {

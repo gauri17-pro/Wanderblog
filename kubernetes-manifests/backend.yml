@@ -15,14 +15,14 @@ spec:
       terminationGracePeriodSeconds: 10
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:	
+          preferredDuringSchedulingIgnoredDuringExecution:	
             - labelSelector:	
                 matchLabels:	
                   app: backend
               topologyKey: topology.kubernetes.io/zone
       containers:
         - name: backend
-          image: gauris17/wanderblog-backend:v1
+          image: aslam1105/wanderblog-backend:v13
           ports:
             - containerPort: 5000
           envFrom:
